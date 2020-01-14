@@ -44,6 +44,23 @@ spec:
       {{- end}}
       {{- end }}
       containers:
+      {{- if .Values.backup.enabled }}
+        - name: {{ .Chart.Name }}-backup
+          image: "{{ .Values.backup.image }}:{{ .Values.backup.imageTag }}"
+          imagePullPolicy: {{ .Values.backup.imagePullPolicy }}
+          env: 
+          - name: GCS_BUCKET
+            value: {{ .Values.backup.gcsBucket}}
+          command:
+            - "sleep"
+            - "infinity"
+          volumeMounts:
+            - name: data
+              mountPath: /backup/eventstore:ro
+      {{- end }}
+      {{- if .Values.sidecar.enabled }}
+{{ toYaml .Values.sidecar.spec | indent 8 }}
+      {{- end }}
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image }}:{{ .Values.imageTag }}"
           imagePullPolicy: {{ .Values.imagePullPolicy }}
