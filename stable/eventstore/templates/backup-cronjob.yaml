@@ -1,3 +1,4 @@
+{{ if .Values.backup }}
 {{ if .Values.backup.enabled }}
 apiVersion: "batch/v1beta1"
 kind: CronJob
@@ -23,4 +24,5 @@ spec:
             - name: SELECTOR
               value: "app={{ .Chart.Name }},release={{ .Release.Name }}"
           restartPolicy: OnFailure
+{{ end }}
 {{ end }}
